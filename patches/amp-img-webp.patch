@@ -1,22 +1,22 @@
---- a/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:13:23.101000000 +0100
-+++ b/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:28:11.764778700 +0100
+---- a/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:13:23.101000000 +0100
+-+++ b/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:28:11.764778700 +0100
 @@ -219,6 +219,19 @@
-        public static function create_node( Document $dom, $tag, $attributes ) {
-                $node = $dom->createElement( $tag );
-                self::add_attributes_to_node( $node, $attributes );
-+               if (
-+                       $tag === 'amp-img'
-+                       && isset($attributes['src'])
-+                       && strpos($attributes['src'], '://wpimg.jixun.moe/') !== false
-+               ) {
-+                       $node->setAttribute( 'fallback', '' );
+ 	public static function create_node( Document $dom, $tag, $attributes ) {
+ 		$node = $dom->createElement( $tag );
+ 		self::add_attributes_to_node( $node, $attributes );
++		if (
++			$tag === 'amp-img'
++			&& isset($attributes['src'])
++			&& strpos($attributes['src'], '://wpimg.jixun.moe/') !== false
++		) {
++			$node->setAttribute( 'fallback', '' );
 +
-+                       $parent = $dom->createElement( $tag );
-+                       self::add_attributes_to_node( $parent, $attributes );
-+                       $parent->setAttribute( 'src', $attributes['src'] . '.webp' );
-+                       $parent->appendChild( $node );
-+                       return $parent;
-+               }
-
-                return $node;
-        }
++			$parent = $dom->createElement( $tag );
++			self::add_attributes_to_node( $parent, $attributes );
++			$parent->setAttribute( 'src', $attributes['src'] . '.webp' );
++			$parent->appendChild( $node );
++			return $parent;
++		}
+ 
+ 		return $node;
+ 	}
