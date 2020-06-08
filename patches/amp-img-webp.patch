@@ -1,6 +1,6 @@
 --- a/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:13:23.101000000 +0100
-+++ b/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:28:11.764778700 +0100
-@@ -219,6 +219,19 @@
++++ b/wp-content/plugins/amp/includes/utils/class-amp-dom-utils.php 2020-06-08 20:55:55.959104800 +0100
+@@ -219,6 +219,25 @@
  	public static function create_node( Document $dom, $tag, $attributes ) {
  		$node = $dom->createElement( $tag );
  		self::add_attributes_to_node( $node, $attributes );
@@ -13,7 +13,13 @@
 +
 +			$parent = $dom->createElement( $tag );
 +			self::add_attributes_to_node( $parent, $attributes );
-+			$parent->setAttribute( 'src', $attributes['src'] . '.webp' );
++			$src = $attributes['src'];
++			$parent->setAttribute( 'src', $src . '.webp' );
++			if ( isset($attributes['srcset']) ) {
++				$srcset = $attributes['srcset'];
++				$ext = substr($src, -4);
++				$parent->setAttribute( 'srcset', str_replace( $ext . ' ', $ext . '.webp ', $srcset ) );
++			}
 +			$parent->appendChild( $node );
 +			return $parent;
 +		}
